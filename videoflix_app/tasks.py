@@ -6,7 +6,6 @@ def convert_480p(source):
     base_name = os.path.splitext(source)[0]
     target = f"{base_name}_480p.mp4"
     cmd = f'ffmpeg -i "{shlex.quote(source)}" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{shlex.quote(target)}"'
-    #run = subprocess.run(cmd, capture_output=True)
 
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
