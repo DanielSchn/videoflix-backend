@@ -1,4 +1,5 @@
 from .models import Video
+from .tasks import convert_480p
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 import os
@@ -8,8 +9,10 @@ import os
 def video_post_save(sender, instance, created, **kwargs):
     if created:
         print('New video created')
+        convert_480p(instance.video_file.path)
     else:
         print('Edited video details saved')
+        
 
 
 @receiver(post_delete, sender=Video)
