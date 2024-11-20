@@ -2,6 +2,7 @@ import subprocess
 import shlex
 import os
 
+
 def convert_480p(source):
     base_name = os.path.splitext(source)[0]
     target = f"{base_name}_480p.mp4"
