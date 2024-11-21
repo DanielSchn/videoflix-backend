@@ -82,7 +82,7 @@ RQ_QUEUES = {
         'DB': 0,
 #        'USERNAME': 'some-user',
         'PASSWORD': 'foobared',
-        'DEFAULT_TIMEOUT': 360,
+        'DEFAULT_TIMEOUT': 3600,
         #'REDIS_CLIENT_KWARGS': {
         #    'ssl_cert_reqs': None,
         #},
