@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'videoflix_app',
     'debug_toolbar',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
@@ -68,20 +69,34 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'
+    #'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 CACHE_TTL = 60 * 15
 
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+#        'USERNAME': 'some-user',
+        'PASSWORD': 'foobared',
+        'DEFAULT_TIMEOUT': 360,
+        #'REDIS_CLIENT_KWARGS': {
+        #    'ssl_cert_reqs': None,
+        #},
+    },
+}
+
 CACHES = {
     "default": {
-        #'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        #"BACKEND": "django.core.cache.backends.redis.RedisCache",
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://:foobared@127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            #"PASSWORD": "foobared",
+            "PASSWORD": "foobared",
         },
         "KEY_PREFIX": "videoflix"
     }

@@ -6,18 +6,31 @@ from django.conf import settings
 from rest_framework import viewsets
 from videoflix_app.models import Video
 from .serializers import VideoSerializer
+from rest_framework.response import Response
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-#@cache_page(CACHE_TTL)
+
+
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
 
-    @cache_page(CACHE_TTL)
-    #@action(detail=False, methods=['get'])
-    def get(self, request, *args, **kwargs):
-        # Wenn du hier eine Cache-Abfrage machst, wird sie im Cache gespeichert
-        queryset = Video.objects.all()
-        return queryset
+    @method_decorator(cache_page(CACHE_TTL))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(CACHE_TTL))
+    def retrieve(self, request, pk=None):
+        video = Video.objects.get(pk=pk)
+        serializer = VideoSerializer(video)
+        return Response(serializer.data)
+    
+
+    def destroy(self, request, pk=None):
+        # Kein Caching hier
+        video = Video.objects.get(pk=pk)
+        video.delete()
+        return Response({"message": "Video deleted"}, status=204)
