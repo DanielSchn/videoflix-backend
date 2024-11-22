@@ -1,5 +1,4 @@
 import subprocess
-import shlex
 import os
 import sys
 from pathlib import Path
@@ -24,47 +23,32 @@ from pathlib import Path
 #        print(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
 #        return None
 
+def test_worker_permissions():
+    test_file = '/home/daniel/projects/videoflix-backend/media/videos/test_file.txt'
+    try:
+        with open(test_file, 'w') as f:
+            f.write('Test')
+        os.remove(test_file)
+        print("Worker hat Schreibrechte.")
+    except Exception as e:
+        print(f"Fehler: {e}")
+
 
 def convert_480p(source):
-    print('erste Zeile convert bevor was gemacht wird')
+    os.environ["PATH"] += ":/usr/bin"
+    if not os.path.isfile(source):
+        print("Die Eingabedatei existiert nicht.")
     source_path = Path(source)
     target_path = source_path.with_name(source_path.stem + '_480p.mp4')
-    ffmpeg_path = '/usr/bin/ffmpeg'
-
-    cmd = [
-        ffmpeg_path, 
-        '-i', str(source_path),
-        '-s', 'hd480',
-        '-c:v', 'libx264', 
-        '-crf', '23',
-        '-c:a', 'aac', 
-        '-strict', '-2', 
-        str(target_path)
-    ]
-
-    print(f'cmd command {cmd}, ffmpeg path {ffmpeg_path}')
-
+    #cmd = 'ffmpeg -i "{}" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(source_path, target_path)
+    # cmd = 'ffmpeg -y -i /home/daniel/projects/videoflix-backend/media/videos/test_video.mp4'
+    cmd = 'ffmpeg -f lavfi -i testsrc=duration=5:size=1280x720:rate=30 test.mp4'
     try:
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        for line in process.stdout:
-            print(line.strip())
-
-        for line in process.stderr:
-            print(line.strip(), file=sys.stderr)
-
-        process.wait()
-
-        if process.returncode != 0:
-            print(f"Fehler bei der Konvertierung (Rückgabewert: {process.returncode})", file=sys.stderr)
-            return False
-        else:
-            print(f"Konvertierung erfolgreich abgeschlossen: {target_path}")
-            return True
-
+        process = subprocess.run(cmd, check=True, shell=True)
+        process.check_returncode()
     except Exception as e:
-        print(f"Fehler beim Starten von FFmpeg: {e}", file=sys.stderr)
-        return False
-
+         print(f"Fehler beim Ausführen des FFmpeg-Befehls: {str(e)}")
+         return None
 
 
 def check_ffmpeg():

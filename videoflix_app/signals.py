@@ -1,5 +1,5 @@
 from .models import Video
-from .tasks import convert_480p, simple_task, check_ffmpeg
+from .tasks import simple_task, check_ffmpeg, convert_480p, test_worker_permissions
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 import os
@@ -13,7 +13,7 @@ def video_post_save(sender, instance, created, **kwargs):
         #queue = django_rq.get_queue('default')
         
         queue = django_rq.get_queue('default', autocommit=True)
-        queue.enqueue(simple_task, instance.video_file.path)
+        #queue.enqueue(test_worker_permissions)
         #queue.enqueue(check_ffmpeg)
         queue.enqueue(convert_480p, instance.video_file.path)
         #convert_480p(instance.video_file.path)
