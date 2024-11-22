@@ -26,13 +26,13 @@ from pathlib import Path
 
 
 def convert_480p(source):
-    # Verwende Pathlib für den Dateipfad
+    print('erste Zeile convert bevor was gemacht wird')
     source_path = Path(source)
     target_path = source_path.with_name(source_path.stem + '_480p.mp4')
+    ffmpeg_path = '/usr/bin/ffmpeg'
 
-    # FFmpeg-Kommando als Liste
     cmd = [
-        'ffmpeg', 
+        ffmpeg_path, 
         '-i', str(source_path),
         '-s', 'hd480',
         '-c:v', 'libx264', 
@@ -42,21 +42,18 @@ def convert_480p(source):
         str(target_path)
     ]
 
-    try:
-        # Starte den FFmpeg-Prozess
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    print(f'cmd command {cmd}, ffmpeg path {ffmpeg_path}')
 
-        # Lese stdout und stderr in Echtzeit
+    try:
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         for line in process.stdout:
-            print(line.strip())  # Fortschritt oder normale Ausgabe
+            print(line.strip())
 
         for line in process.stderr:
-            print(line.strip(), file=sys.stderr)  # Fehlerausgabe
+            print(line.strip(), file=sys.stderr)
 
-        # Warten, bis der Prozess abgeschlossen ist
         process.wait()
 
-        # Überprüfen, ob der FFmpeg-Prozess erfolgreich war
         if process.returncode != 0:
             print(f"Fehler bei der Konvertierung (Rückgabewert: {process.returncode})", file=sys.stderr)
             return False
