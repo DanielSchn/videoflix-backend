@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-nl@f%iapz@+y9z9ry-pgq$qoj!=pv12$sb6ln(m_tb2&a44rys
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.8.86']
+ALLOWED_HOSTS = ['192.168.8.86', '127.0.0.1']
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'videoflix_app',
     'debug_toolbar',
     'django_rq',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,9 @@ CACHES = {
 }
 
 ROOT_URLCONF = 'videoflix.urls'
+
+#import-export
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 TEMPLATES = [
     {
@@ -169,6 +173,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
