@@ -34,6 +34,9 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+#custom user
+AUTH_USER_MODEL = 'users.CustomUser'
+
 
 # change True or False to show the toolbar
 def show_toolbar(request):
@@ -59,6 +62,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_rq',
     'import_export',
+    'users',
 ]
 
 MIDDLEWARE = [
