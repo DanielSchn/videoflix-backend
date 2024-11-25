@@ -23,15 +23,17 @@ def convert_480p(source):
     target = file + f'_480p.mp4'
     
     cmd = f'ffmpeg -i "{source}" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{target}"'
-    
-    # Reine Testdatei die NUR erstellt wird!
-    #cmd = 'ffmpeg -f lavfi -i testsrc=duration=5:size=1280x720:rate=30 test.mp4'
+    #cmd = f'ffmpeg -i "/home/daniel/projects/videoflix-backend/output.mp4" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{target}"'
+
+    #Reine Testdatei die NUR erstellt wird!
+    #cmd = 'ffmpeg -f lavfi -i testsrc=duration=5:size=1280x720:rate=30 -y test.mp4'
     try:
-        process = subprocess.run(cmd, check=True, shell=True)
+        process = subprocess.run(cmd, capture_output=False, shell=True, check=True)
         process.check_returncode()
     except Exception as e:
-         print(f"Fehler beim Ausführen des FFmpeg-Befehls: {str(e)}")
-         return None
+          print(f"Fehler beim Ausführen des FFmpeg-Befehls: {str(e)}")
+          return None
+
 
 
 def check_ffmpeg():
@@ -41,6 +43,7 @@ def check_ffmpeg():
         print(f"FFmpeg Version: {stdout}")
     else:
         print(f"FFmpeg Fehler: {stderr}", file=sys.stderr)
+
 
 def simple_task(path):
     print(f"Processing: {path}")
