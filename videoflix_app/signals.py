@@ -12,11 +12,11 @@ def video_post_save(sender, instance, created, **kwargs):
         print('New video created')
         #queue = django_rq.get_queue('default')
         
-        queue = django_rq.get_queue('default', autocommit=True)
+        #queue = django_rq.get_queue('default', autocommit=True)
         #queue.enqueue(test_worker_permissions)
         #queue.enqueue(check_ffmpeg)
-        queue.enqueue(convert_480p, instance.video_file.path)
-        #convert_480p(instance.video_file.path)
+        #queue.enqueue(convert_480p, instance.video_file.path)
+        convert_480p(instance.video_file.path)
         print('SOURCE', instance.video_file.path)
     else:
         print('Edited video details saved')
