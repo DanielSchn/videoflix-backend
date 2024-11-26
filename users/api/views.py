@@ -47,7 +47,7 @@ class RegistrationView(APIView):
                 'verification_url': verification_url,
             }
             subject = 'Bitte bestätigen Sie Ihre E-Mail-Adresse'
-            from_email = 'noreply@dschneider-dev.de'
+            from_email = 'Videoflix <noreply@dschneider-dev.de>'
             recipient_list = [saved_account.email]
 
             html_content = render_to_string('email_verification.html', context)
