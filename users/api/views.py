@@ -7,13 +7,14 @@ from .serializers import RegistrationSerializer, CustomUserSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import status, generics
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
+from django.template.loader import render_to_string
 
 
 
@@ -39,29 +40,35 @@ class RegistrationView(APIView):
             uid = urlsafe_base64_encode(str(saved_account.pk).encode())
 
             domain = get_current_site(request).domain
-            verification_url = reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
-            full_url = f'http://{domain}{verification_url}'
+            verification_url = f'http://{domain}/api/verify-email/{uid}/{token}/'
+            
+            context = {
+                'user': saved_account,
+                'verification_url': verification_url,
+            }
+            subject = 'Bitte bestätigen Sie Ihre E-Mail-Adresse'
+            from_email = 'noreply@dschneider-dev.de'
+            recipient_list = [saved_account.email]
 
-            send_mail(
-                'Bitte bestätigen Sie Ihre Anmeldung.',
-                f'Klicken Sie auf den folgenden Link um Ihre Email zu bestätigen: {full_url}',
-                'noreply@dschneider-dev.de',
-                [saved_account.email],
-                fail_silently=False,
-            )
+            html_content = render_to_string('email_verification.html', context)
+            text_content = f"""
+            Hallo {saved_account.email},
+            
+            Vielen Dank für Ihre Registrierung! Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:
+            
+            {verification_url}
+            
+            Danke, dass Sie Videoflix nutzen!
+            Das Videoflix-Team
+            """
+
+            email = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
+            email.attach_alternative(html_content, 'text/html')
+            email.send()
 
             return Response({
                 'message': 'Registrierung erfolgreich. Bitte prüfen Sie Ihr Emailpostfach zum bestätigen Ihres Accounts.',
                 }, status=status.HTTP_201_CREATED)
-            
-            #token, created = Token.objects.get_or_create(user=saved_account)
-            #data = {
-            #    'token': token.key,
-            #    'username': saved_account.username,
-            #    'email': saved_account.email,
-            #    'user_id': saved_account.pk
-            #}
-            #return Response(data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
