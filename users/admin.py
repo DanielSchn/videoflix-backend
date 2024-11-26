@@ -15,7 +15,7 @@ class CustomUserAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'custom',
-                    'phone',
+                    'is_email_verified',
                     'address',
                 )
             }
