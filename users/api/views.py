@@ -40,7 +40,7 @@ class RegistrationView(APIView):
             uid = urlsafe_base64_encode(str(saved_account.pk).encode())
 
             domain = get_current_site(request).domain
-            verification_url = f'http://{domain}/api/verify-email/{uid}/{token}/'
+            verification_url = f'https://{domain}/api/verify-email/{uid}/{token}/'
             
             context = {
                 'user': saved_account,
