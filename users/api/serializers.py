@@ -42,6 +42,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         )
 
         user.is_active = False
+        user.is_email_verified = False
         user.save()
 
         return user

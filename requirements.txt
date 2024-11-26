@@ -8,6 +8,7 @@ django-redis==5.4.0
 django-rq==2.10.2
 djangorestframework==3.15.2
 ffmpeg==1.4
+python-decouple==3.8
 redis==5.2.0
 rq==1.16.2
 sqlparse==0.5.2
