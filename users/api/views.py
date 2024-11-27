@@ -12,7 +12,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,render
 from django.contrib.auth import login
 from django.template.loader import render_to_string
 
@@ -39,8 +39,9 @@ class RegistrationView(APIView):
             token = default_token_generator.make_token(saved_account)
             uid = urlsafe_base64_encode(str(saved_account.pk).encode())
 
-            domain = get_current_site(request).domain
-            verification_url = f'https://{domain}/api/verify-email/{uid}/{token}/'
+            #domain = get_current_site(request).domain
+            frontend_domain = 'http://localhost:4200'
+            verification_url = f'{frontend_domain}/verify-email?uid={uid}&token={token}'
             
             context = {
                 'user': saved_account,
@@ -75,20 +76,44 @@ class RegistrationView(APIView):
 
 class VerifyEmailView(APIView):
 
-    def get(self, request, uidb64, token):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = get_object_or_404(get_user_model(), pk=uid)
+    # def get(self, request, uidb64, token):
+    #     try:
+    #         uid = urlsafe_base64_decode(uidb64).decode()
+    #         user = get_object_or_404(get_user_model(), pk=uid)
 
+    #         if default_token_generator.check_token(user, token):
+    #             user.is_active = True
+    #             user.is_email_verified = True
+    #             user.save()
+
+    #             login(request, user)
+    #         #    return Response({'message': 'Email bestätigt, Benutzer aktiv!'}, status=status.HTTP_200_OK)
+    #             return render(request, 'success_verify.html', {'user': user})
+            
+    #         return Response({'error': 'Ungültiger Bestätigungscode!'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    #     except Exception as e:
+    #         return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        uid = request.data.get('uid')
+        token = request.data.get('token')
+
+        if not uid or not token:
+            return Response({'error': 'UID und Token sind erforderlich.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            uid = urlsafe_base64_decode(uid).decode()
+            user = get_object_or_404(get_user_model(), pk=uid)
+            print(f'Token: {token}')
             if default_token_generator.check_token(user, token):
                 user.is_active = True
                 user.is_email_verified = True
                 user.save()
 
-                login(request, user)
-                return Response({'message': 'Email bestätigt, Benutzer aktiv!'}, status=status.HTTP_200_OK)
+                return Response({'message': 'E-Mail erfolgreich bestätigt!'}, status=status.HTTP_200_OK)
             
-            return Response({'error': 'Ungültiger Bestätigungscode!'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({'error': 'Ungültiger Token.'}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
-            return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Ein Fehler ist aufgetreten.'}, status=status.HTTP_400_BAD_REQUEST)

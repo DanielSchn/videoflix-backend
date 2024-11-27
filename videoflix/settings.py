@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.8.86', '127.0.0.1']
 
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'videoflix_app',
     'debug_toolbar',
     'django_rq',
@@ -72,12 +74,21 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.middleware.cache.UpdateCacheMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware'
+    'corsheaders.middleware.CorsMiddleware'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:4200',
+    'http://localhost:4200'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:4200',
+    'http://localhost:4200'
 ]
 
 CACHE_TTL = 60 * 15

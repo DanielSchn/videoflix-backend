@@ -27,7 +27,7 @@ urlpatterns = [
     path('django-rq/', include('django_rq.urls')),
     path('api/', include('videoflix_app.api.urls')),
     path('api/registration/', RegistrationView.as_view(), name='registration'),
-    path('api/verify-email/<uidb64>/<token>/', VerifyEmailView.as_view(), name='verify_email'),
+    path('api/verify-email/', VerifyEmailView.as_view(), name='verify_email'),
     path('api/users/', UsersView.as_view(), name='users'),
 ]
 
