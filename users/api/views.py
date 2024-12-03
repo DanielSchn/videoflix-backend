@@ -1,21 +1,17 @@
 from rest_framework.views import APIView
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from .serializers import RegistrationSerializer, CustomUserSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import status, generics
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
-from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from django.shortcuts import get_object_or_404,render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.template.loader import render_to_string
-
+from django.conf import settings
 
 
 class UsersView(generics.ListAPIView):
@@ -39,8 +35,7 @@ class RegistrationView(APIView):
             token = default_token_generator.make_token(saved_account)
             uid = urlsafe_base64_encode(str(saved_account.pk).encode())
 
-            #domain = get_current_site(request).domain
-            frontend_domain = 'http://localhost:4200'
+            frontend_domain = settings.FRONTEND_DOMAIN
             verification_url = f'{frontend_domain}/verify-email?uid={uid}&token={token}'
             
             context = {
@@ -48,7 +43,7 @@ class RegistrationView(APIView):
                 'verification_url': verification_url,
             }
             subject = 'Bitte bestätigen Sie Ihre E-Mail-Adresse'
-            from_email = 'Videoflix <noreply@dschneider-dev.de>'
+            from_email = settings.DEFAULT_FROM_EMAIL
             recipient_list = [saved_account.email]
 
             html_content = render_to_string('email_verification.html', context)
@@ -68,7 +63,7 @@ class RegistrationView(APIView):
             email.send()
 
             return Response({
-                'message': 'Registrierung erfolgreich. Bitte prüfen Sie Ihr Emailpostfach zum bestätigen Ihres Accounts.',
+                'message': ['Registrierung erfolgreich. Bitte prüfen Sie Ihr Emailpostfach zum bestätigen Ihres Accounts.'],
                 }, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -100,12 +95,12 @@ class VerifyEmailView(APIView):
         token = request.data.get('token')
 
         if not uid or not token:
-            return Response({'error': 'UID und Token sind erforderlich.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': ['UID und Token sind erforderlich.']}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             uid = urlsafe_base64_decode(uid).decode()
             user = get_object_or_404(get_user_model(), pk=uid)
-            print(f'Token: {token}')
+
             if default_token_generator.check_token(user, token):
                 user.is_active = True
                 user.is_email_verified = True
@@ -117,3 +112,79 @@ class VerifyEmailView(APIView):
 
         except Exception as e:
             return Response({'error': 'Ein Fehler ist aufgetreten.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequest(APIView):
+    User = get_user_model()
+
+    def post(self, request):
+        email = request.data.get('email')
+
+        if not email:
+            return Response({'error': ['E-Mail Adresse benötigt.']})
+        
+        try:
+            user = self.User.objects.get(email=email)
+            token_generator = PasswordResetTokenGenerator()
+            token = token_generator.make_token(user)
+            uid = urlsafe_base64_encode(str(user.pk).encode())
+            reset_url = f'{settings.FRONTEND_DOMAIN}/password-reset?uid={uid}&token={token}'
+
+            subject = 'Reset password'
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipent_list = [user.email]
+            context = {
+                'user' : user,
+                'reset_url': reset_url
+            }
+
+            html_content = render_to_string('password_reset.html', context)
+            text_content = f"""
+            Hi {user.username},
+
+            You've requested to reset your password. Please click on the following link: {reset_url}
+
+            If you didn't request this, please ignore this email.
+
+            Thank you,
+            The Videoflix Team
+            """
+
+            email = EmailMultiAlternatives(subject, text_content, from_email, recipent_list)
+            email.attach_alternative(html_content, 'text/html')
+            email.send()
+
+            return Response({'message': 'Password reset mail sent.'}, status=status.HTTP_200_OK)
+        
+        except self.User.DoesNotExist:
+            return Response({'error': 'No user found with this mail.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class PasswordResetConfirm(APIView):
+    User = get_user_model()
+
+    def post(self, request):
+        uid = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        if not uid or not token or not new_password:
+            return Response({'error': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        try:
+            user_id = urlsafe_base64_decode(uid).decode()
+            user = self.User.objects.get(pk=user_id)
+
+            token_generator = PasswordResetTokenGenerator()
+            if token_generator.check_token(user, token):
+                user.set_password(new_password)
+                user.save()
+                return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid or expired token.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        except self.User.DoesNotExist:
+            return Response({'error': 'The specified user could not be found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
