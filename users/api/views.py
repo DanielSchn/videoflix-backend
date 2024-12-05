@@ -12,7 +12,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.template.loader import render_to_string
-from django.conf import settings
+import os
+#from django.conf import settings
 
 
 class UsersView(generics.ListAPIView):
@@ -36,7 +37,7 @@ class RegistrationView(APIView):
             token = default_token_generator.make_token(saved_account)
             uid = urlsafe_base64_encode(str(saved_account.pk).encode())
 
-            frontend_domain = settings.FRONTEND_DOMAIN
+            frontend_domain = os.environ.get('FRONTEND_DOMAIN')
             verification_url = f'{frontend_domain}/verify-email?uid={uid}&token={token}'
             
             context = {
@@ -44,7 +45,7 @@ class RegistrationView(APIView):
                 'verification_url': verification_url,
             }
             subject = 'Bitte bestätigen Sie Ihre E-Mail-Adresse'
-            from_email = settings.DEFAULT_FROM_EMAIL
+            from_email = os.environ.get('DEFAULT_FROM_EMAIL')
             recipient_list = [saved_account.email]
 
             html_content = render_to_string('email_verification.html', context)
@@ -152,10 +153,10 @@ class PasswordResetRequest(APIView):
             token_generator = PasswordResetTokenGenerator()
             token = token_generator.make_token(user)
             uid = urlsafe_base64_encode(str(user.pk).encode())
-            reset_url = f'{settings.FRONTEND_DOMAIN}/password-reset?uid={uid}&token={token}'
+            reset_url = f'{os.environ.get('FRONTEND_DOMAIN')}/password-reset?uid={uid}&token={token}'
 
             subject = 'Reset password'
-            from_email = settings.DEFAULT_FROM_EMAIL
+            from_email = os.environ.get('DEFAULT_FROM_EMAIL')
             recipent_list = [user.email]
             context = {
                 'user' : user,

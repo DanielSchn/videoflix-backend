@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,17 +26,14 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nl@f%iapz@+y9z9ry-pgq$qoj!=pv12$sb6ln(m_tb2&a44rys'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.8.86', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+INTERNAL_IPS = os.environ.get('INTERNAL_IPS', '').split(',')
 
 #custom user
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -81,42 +80,33 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware'
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:4200',
-    'http://localhost:4200'
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:4200',
-    'http://localhost:4200'
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+
 
 CACHE_TTL = 60 * 15
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-#        'USERNAME': 'some-user',
-        'PASSWORD': 'foobared',
-        'DEFAULT_TIMEOUT': 3600,
-        #'REDIS_CLIENT_KWARGS': {
-        #    'ssl_cert_reqs': None,
-        #},
+        'HOST': os.environ.get('RQ_DEFAULT_HOST', 'localhost'),
+        'PORT': os.environ.get('RQ_DEFAULT_PORT', 6379),
+        'DB': os.environ.get('RQ_DEFAULT_DB', 0),
+        #'USERNAME': '',
+        'PASSWORD': os.environ.get('RQ_DEFAULT_PASSWORD', None),
+        'DEFAULT_TIMEOUT': os.environ.get('RQ_DEFAULT_TIMEOUT', 360),
     },
 }
 
 CACHES = {
     "default": {
-        #"BACKEND": "django.core.cache.backends.redis.RedisCache",
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": os.environ.get('REDIS_LOCATION'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": "foobared",
+            "PASSWORD": os.environ.get('REDIS_PASSWORD', None),
         },
-        "KEY_PREFIX": "videoflix"
+        "KEY_PREFIX": ('REDIS_KEY_PREFIX', '')
     }
 }
 
@@ -198,16 +188,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #Productive
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #Development
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #Productive
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #Development
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in ['true', '1', 'yes']
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
-#default values
-FRONTEND_DOMAIN = 'http://localhost:4200'
-BACKEND_DOMAIN = 'http://127.0.0.1:8000'
-
-DEFAULT_FROM_EMAIL = 'Videoflix <noreply@dschneider-dev.de>'
