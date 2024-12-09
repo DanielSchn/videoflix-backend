@@ -20,11 +20,9 @@ class VideoViewSet(viewsets.ModelViewSet):
     @method_decorator(cache_page(CACHE_TTL))
     def list(self, request, *args, **kwargs):
         queryset = Video.objects.all()
-        print(f'QuerySET {queryset}')
         serializer = VideoSerializer(queryset, many=True)
-        print(f'QuerySET {queryset}')
         return Response(serializer.data)
-        # return super().list(request, *args, **kwargs)
+
 
     @method_decorator(cache_page(CACHE_TTL))
     def retrieve(self, request, pk=None):
@@ -34,7 +32,6 @@ class VideoViewSet(viewsets.ModelViewSet):
     
 
     def destroy(self, request, pk=None):
-        # Kein Caching hier
         video = Video.objects.get(pk=pk)
         video.delete()
         return Response({"message": "Video deleted"}, status=204)

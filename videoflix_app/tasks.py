@@ -14,32 +14,21 @@ RESOLUTIONS = {
 }
 
 
-def test_worker_permissions():
-    test_file = '/home/daniel/projects/videoflix-backend/media/videos/test_file.txt'
-    try:
-        with open(test_file, 'w') as f:
-            f.write('Test')
-        os.remove(test_file)
-        print("Worker hat Schreibrechte.")
-    except Exception as e:
-        print(f"Fehler: {e}")
+# def convert_480p(source):
+#     if not os.path.isfile(source):
+#         print("Die Eingabedatei existiert nicht.")
 
-
-def convert_480p(source):
-    if not os.path.isfile(source):
-        print("Die Eingabedatei existiert nicht.")
-
-    file, _ = os.path.splitext(source)
-    target = file + f'_480p.mp4'
+#     file, _ = os.path.splitext(source)
+#     target = file + f'_480p.mp4'
     
-    cmd = f'ffmpeg -i "{source}" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{target}"'
+#     cmd = f'ffmpeg -i "{source}" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{target}"'
     
-    try:
-        process = subprocess.run(cmd, capture_output=False, shell=True, check=True)
-        process.check_returncode()
-    except Exception as e:
-          print(f"Fehler beim Ausführen des FFmpeg-Befehls: {str(e)}")
-          return None
+#     try:
+#         process = subprocess.run(cmd, capture_output=False, shell=True, check=True)
+#         process.check_returncode()
+#     except Exception as e:
+#           print(f"Fehler beim Ausführen des FFmpeg-Befehls: {str(e)}")
+#           return None
     
 
 def convert_video(source, video_instance):
@@ -48,7 +37,6 @@ def convert_video(source, video_instance):
         return None
 
     try:
-        # Iteriere über alle Auflösungen und führe die Konvertierung durch
         for resolution, config in RESOLUTIONS.items():
             file, _ = os.path.splitext(source)
             target = file + f'_{resolution}.mp4'
@@ -58,16 +46,13 @@ def convert_video(source, video_instance):
 
             subprocess.run(cmd, capture_output=False, shell=True, check=True)
 
-            # Speichere das konvertierte Video im entsprechenden Feld
             with open(target, 'rb') as f:
                 field_name = config['field']
-                # Wir stellen sicher, dass das `video_instance` das richtige Attribut hat
                 getattr(video_instance, field_name).save(os.path.basename(target), File(f), save=True)
 
             os.remove(target)
             print(f'{resolution} erfolgreich konvertiert und gespeichert!')
 
-        # Optional: Lösche die Originaldatei, wenn sie nicht mehr benötigt wird
         os.remove(source)
         video_instance.original_file.delete(save=False)
 
@@ -86,18 +71,13 @@ def convert_video(source, video_instance):
 
 
 
-def check_ffmpeg():
-    process = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    stdout, stderr = process.communicate()
-    if process.returncode == 0:
-        print(f"FFmpeg Version: {stdout}")
-    else:
-        print(f"FFmpeg Fehler: {stderr}", file=sys.stderr)
-
-
-def simple_task(path):
-    print(f"Processing: {path}")
-
+# def check_ffmpeg():
+#     process = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+#     stdout, stderr = process.communicate()
+#     if process.returncode == 0:
+#         print(f"FFmpeg Version: {stdout}")
+#     else:
+#         print(f"FFmpeg Fehler: {stderr}", file=sys.stderr)
 
 
 # Funktion an sich läuft. Ist für später gedacht dann mit video.js
