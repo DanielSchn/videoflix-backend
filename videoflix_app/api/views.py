@@ -17,14 +17,14 @@ class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
-    @method_decorator(cache_page(CACHE_TTL))
+    #@method_decorator(cache_page(CACHE_TTL))
     def list(self, request, *args, **kwargs):
         queryset = Video.objects.all()
         serializer = VideoSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
-    @method_decorator(cache_page(CACHE_TTL))
+    #@method_decorator(cache_page(CACHE_TTL))
     def retrieve(self, request, pk=None):
         video = Video.objects.get(pk=pk)
         serializer = VideoSerializer(video)
