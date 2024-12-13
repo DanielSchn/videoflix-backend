@@ -36,4 +36,10 @@ def video_post_delete(sender, instance, *args, **kwargs):
                 os.remove(converted_path)
                 print(f'{resolution} Datei gelöscht!')
 
+    if instance.thumbnail and instance.thumbnail.name:
+        thumbnail_path = instance.thumbnail.path
+        if os.path.isfile(thumbnail_path):
+            os.remove(thumbnail_path)
+            print('Thumbnail-Datei gelöscht!')
+
     print('Video-Objekt gelöscht!')
