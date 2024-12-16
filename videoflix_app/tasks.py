@@ -1,5 +1,6 @@
 import subprocess
 import os
+import re
 import sys
 from pathlib import Path
 from django.core.files import File
@@ -56,6 +57,8 @@ def convert_video(source, video_instance):
         os.remove(source)
         video_instance.original_file.delete(save=False)
 
+        set_video_category(video_instance)
+
         video_instance.save()
         print(f'Alle Auflösungen wurden konvertiert und gespeichert!')
         return video_instance
@@ -63,6 +66,34 @@ def convert_video(source, video_instance):
     except Exception as e:
         print(f'Fehler bei der Verarbeitung der Videos: {str(e)}!')
         return None
+    
+
+ALLOWED_CATEGORIES = os.environ.get('ALLOWED_CATEGORIES').split(',')
+
+def set_video_category_for_all():
+    videos = Video.objects.all()
+    for video in videos:
+        set_video_category(video)
+
+def extract_category_from_filename(filename):
+    for category in ALLOWED_CATEGORIES:
+        if category in filename.lower():
+            return category
+    return None
+
+def set_video_category(video_instance):
+    filename = video_instance.thumbnail.name
+    print(f"Thumbnail Dateiname: {filename}")
+
+    category = extract_category_from_filename(filename)
+    
+    if category:
+        video_instance.category = category
+        video_instance.save()
+        print(f"Kategorie \"{category}\" für Video ID {video_instance.id} gespeichert.")
+    else:
+        print(f"Keine gültige Kategorie im Thumbnail für Video ID {video_instance.id} gefunden.")
+
     
 
 #cmd = f'ffmpeg -i "/home/daniel/projects/videoflix-backend/output.mp4" -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 "{target}"'
