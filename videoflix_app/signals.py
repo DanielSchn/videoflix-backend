@@ -1,5 +1,5 @@
 from .models import Video
-from .tasks import convert_video, set_video_category
+from .tasks import convert_video
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 import os
