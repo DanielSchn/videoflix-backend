@@ -137,5 +137,5 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 
-readme.md
 temp_hls
+static/

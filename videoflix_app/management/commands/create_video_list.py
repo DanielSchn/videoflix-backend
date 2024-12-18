@@ -77,45 +77,8 @@ VIDEO_METADATA = {
 class Command(BaseCommand):
     help = 'Uploads videos from a specified folder into the Video model'
 
-    # def handle(self, *args, **kwargs):
-    #     video_folder = '/home/daniel/projects/videoflix-videos'
-    #     video_files = [f for f in os.listdir(video_folder) if os.path.isfile(os.path.join(video_folder, f))]
-
-    #     for video_file in video_files:
-    #         if video_file in VIDEO_METADATA:
-    #             metadata = VIDEO_METADATA[video_file]
-    #             video_title = metadata['title']
-    #             video_description = metadata['description']
-    #             video_thumbnail_name = metadata['thumbnail']
-    #             video_path = os.path.join(video_folder, video_file)
-    #             thumbnail_path = os.path.join(video_folder, video_thumbnail_name)
-
-    #             # Überprüfen, ob der Dateiname mit der MP4-Erweiterung endet
-    #             if video_file.lower().endswith('.mp4'):
-    #                 try:
-    #                     # Dateioperationen innerhalb einer Transaktion
-    #                     with open(video_path, 'rb') as video_file_obj, open(thumbnail_path, 'rb') as thumbnail_file_obj:
-    #                         video = Video(
-    #                             title=video_title,
-    #                             description=video_description,
-    #                             original_file=File(video_file_obj, name=video_file)
-    #                         )
-    #                         # Das Thumbnail setzen
-    #                         video.thumbnail = File(thumbnail_file_obj, name=video_thumbnail_name)
-    #                         video.save()
-
-    #                     # Erfolgreiches Hochladen
-    #                     self.stdout.write(self.style.SUCCESS(f'Successfully uploaded video: {video_title} with thumbnail.'))
-    #                 except Exception as e:
-    #                     self.stdout.write(self.style.ERROR(f'Error uploading video {video_title}: {e}'))
-    #             else:
-    #                 self.stdout.write(self.style.WARNING(f'Skipping non-mp4 file: {video_file}'))
-    #         else:
-    #             self.stdout.write(self.style.WARNING(f'No metadata found for file: {video_file}'))
-
-
     def handle(self, *args, **kwargs):
-        video_folder = '/home/daniel/projects/videoflix-videos'
+        video_folder = os.environ.get('VIDEO_FOLDER')
         video_files = [f for f in os.listdir(video_folder) if os.path.isfile(os.path.join(video_folder, f))]
 
         for video_file in video_files:
