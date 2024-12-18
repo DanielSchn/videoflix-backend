@@ -179,10 +179,10 @@ class PasswordResetRequest(APIView):
             email.attach_alternative(html_content, 'text/html')
             email.send()
 
-            return Response({'message': 'Password reset mail sent.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'If the user exists, you will get an email with instructions.'}, status=status.HTTP_200_OK)
         
         except self.User.DoesNotExist:
-            return Response({'error': 'No user found with this mail.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'If the user exists, you will get an email with instructions.'}, status=status.HTTP_200_OK)
 
 
 class PasswordResetConfirm(APIView):
