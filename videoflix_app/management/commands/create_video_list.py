@@ -7,71 +7,56 @@ from django.db import transaction
 
 # Die vordefinierten Titel und Beschreibungen der Videos, basierend auf den Dateinamen
 VIDEO_METADATA = {
-    "boxing_sports.mp4": {
-        "title": "The Fight for Glory",
-        "description": "A thrilling journey into the world of boxing, showcasing intense matches, legendary fighters, and the perseverance needed to reach the top of the sport.",
-        "thumbnail": "boxing_sports.jpg"
-    },
     "howto_sports.mp4": {
         "title": "How to Master Sports",
         "description": "A comprehensive guide to excelling in various sports, offering expert tips and techniques for athletes of all skill levels.",
-        "thumbnail": "howto_sports.jpg"
-    },
-    "racing_sports.mp4": {
-        "title": "Race to Victory",
-        "description": "Dive into the fast-paced world of racing, exploring the excitement, skill, and adrenaline that go into becoming a champion on the track.",
-        "thumbnail": "racing_sports.jpg"
+        "thumbnail": "howto_sports.png"
     },
     "breakout_crime.mp4": {
         "title": "Breaking the Law",
         "description": "A gripping documentary examining high-profile crime cases, exploring the causes, consequences, and criminal investigations that captivate the world.",
-        "thumbnail": "breakout_crime.jpg"
+        "thumbnail": "breakout_crime.png"
     },
     "majesticwhales_documentary.mp4": {
         "title": "Giants of the Ocean",
         "description": "A mesmerizing exploration of the lives of whales, uncovering the beauty and mystery of these magnificent ocean giants.",
-        "thumbnail": "majesticwhales_documentary.jpg"
-    },
-    "soccer_sports.mp4": {
-        "title": "Soccer Legends",
-        "description": "An inspiring look at the passion, strategy, and history behind soccer, highlighting the iconic players and moments that have defined the sport.",
-        "thumbnail": "soccer_sports.jpg"
+        "thumbnail": "majesticwhales_documentary.png"
     },
     "castle_documentary.mp4": {
         "title": "Castles Through Time",
         "description": "Journey through history as you explore the majestic castles that have stood the test of time, unraveling their rich stories and architectural wonders.",
-        "thumbnail": "castle_documentary.jpg"
+        "thumbnail": "castle_documentary.png"
     },
     "manga_documentary.mp4": {
         "title": "The Art of Manga",
         "description": "A captivating dive into the world of manga, exploring its origins, impact on pop culture, and the artistic journey behind this beloved medium.",
-        "thumbnail": "manga_documentary.jpg"
-    },
-    "bodybuilding_sports.mp4": {
-        "title": "The Power of Sports",
-        "description": "A celebration of the global power of sports, showing how they bring people together and inspire millions across the world.",
-        "thumbnail": "bodybuilding_sports.jpg"
+        "thumbnail": "manga_documentary.png"
     },
     "dancing_sports.mp4": {
         "title": "Dancing Through Life",
         "description": "A vibrant exploration of dance in the world of sports, blending movement, rhythm, and athleticism to create breathtaking performances.",
-        "thumbnail": "dancing_sports.jpg"
+        "thumbnail": "dancing_sports.png"
     },
-    "paralympic_sports.mp4": {
-        "title": "The Spirit of Champions",
-        "description": "A moving documentary focusing on the inspiring athletes of the Paralympic Games, showcasing their strength, determination, and triumphs.",
-        "thumbnail": "paralympic_sports.jpg"
+    "hateyou_crime.mp4": {
+        "title": "Hate You?",
+        "description": "A powerful emotional journey that delves into the complexities of human relationships, exploring feelings of anger, betrayal, and the struggle to overcome deep-seated hatred.",
+        "thumbnail": "hateyou_crime.png"
     },
     "friendship_romance.mp4": {
         "title": "Friendship",
         "description": "A heartwarming tale of friendship blossoming into romance, as two souls discover the beauty of love and connection.",
-        "thumbnail": "friendship_romance.jpg"
+        "thumbnail": "friendship_romance.png"
     },
     "police_crime.mp4": {
         "title": "Police on the Beat",
         "description": "A thrilling documentary following police officers as they investigate crime, solve cases, and ensure justice is served in urban environments.",
-        "thumbnail": "police_crime.jpg"
-    }
+        "thumbnail": "police_crime.png"
+    },
+    "babys_documentary.mp4": {
+        "title": "Baby's Secret Language",
+        "description": "An insightful exploration into the mysterious world of babies' communication, uncovering the subtle cues and gestures that reveal their thoughts and emotions.",
+        "thumbnail": "babys_documentary.png"
+}
 }
 
 class Command(BaseCommand):

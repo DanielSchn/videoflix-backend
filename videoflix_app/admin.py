@@ -12,5 +12,5 @@ class VideoResource(resources.ModelResource):
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
     resource_class = VideoResource
-    list_display = ['title', 'description', 'created_at']
+    list_display = ['title', 'description', 'created_at', 'video_480p']
     list_filter = ['title', 'created_at']
