@@ -1,6 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
-# Create your models here.
+User = get_user_model()
 class Video(models.Model):
 
     original_file = models.FileField(upload_to='videos/originals/', blank=True, null=True)
@@ -15,3 +16,12 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class VideoProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video_name = models.CharField(max_length=150)
+    current_time = models.FloatField()
+
+    def __str__(self):
+        return f'{self.user} - {self.video_name} - {self.current_time}'
