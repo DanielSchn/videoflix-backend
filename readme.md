@@ -35,6 +35,7 @@ source env/bin/activate # Linux/Mac
 ```
 pip install -r requirements.txt
 ```
+Desweiteren muss noch eine .env Datei erstellt werden und laut dem .env_template ausgefüllt werden.
 ### 4. Django-Projekt initialisieren
 Datenbank migrieren und Server starten
 ```
