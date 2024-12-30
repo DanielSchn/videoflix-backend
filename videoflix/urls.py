@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from debug_toolbar.toolbar import debug_toolbar_urls
-from users.api.views import RegistrationView, UsersView, VerifyEmailView, PasswordResetRequest, PasswordResetConfirm, LoginView
+from users.api.views import RegistrationView, UsersView, VerifyEmailView, PasswordResetRequest, PasswordResetConfirm, LoginView, TokenCheckView
 
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/users/', UsersView.as_view(), name='users'),
     path('api/password-reset/', PasswordResetRequest.as_view(), name='password-reset-request'),
     path('api/password-reset-confirm/', PasswordResetConfirm.as_view(), name='password-reset-confirm'),
+    path('api/token-check/', TokenCheckView.as_view(), name='token-check'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from .serializers import RegistrationSerializer, CustomUserSerializer
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import status, generics
@@ -471,3 +471,19 @@ class PasswordResetConfirm(APIView):
             return Response({'error': 'The specified user could not be found.'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class TokenCheckView(APIView):
+    """
+    Endpoint to check if the provided token is valid.
+    """
+
+    permission_classes = [IsAuthenticated]  # Nur authentifizierte Benutzer können darauf zugreifen
+    #authentication_classes = [TokenAuthentication]  # Nur Token Authentifizierung wird verwendet
+
+    def get(self, request):
+        """
+        Überprüft, ob der Benutzer mit einem gültigen Token authentifiziert ist.
+        Gibt `true` zurück, wenn der Token gültig ist, andernfalls `false`.
+        """
+        return Response({"valid": True}, status=200)
