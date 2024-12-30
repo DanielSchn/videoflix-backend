@@ -60,9 +60,44 @@ VIDEO_METADATA = {
 }
 
 class Command(BaseCommand):
+    """
+    Custom management command that uploads videos and their associated metadata 
+    from a specified folder into the `Video` model in the Django application.
+
+    The command reads video files and their corresponding metadata (such as title, description, and thumbnail name) 
+    from a directory specified by the environment variable `VIDEO_FOLDER`. It then creates `Video` model instances 
+    and stores the video files and thumbnails in the appropriate fields.
+
+    Usage:
+        python manage.py upload_videos
+
+    Environment Variables:
+        - `VIDEO_FOLDER`: The folder where video files and thumbnail images are stored.
+    
+    Metadata:
+        - The metadata for the videos is expected to be found in the `VIDEO_METADATA` dictionary.
+        - The dictionary keys are the filenames (case-insensitive) of the video files, and the values should contain 
+          metadata such as `title`, `description`, and `thumbnail`.
+
+    Output:
+        The command will output the following based on its execution:
+        - Success: If the video and thumbnail are successfully uploaded.
+        - Warning: If the video or thumbnail file is missing.
+        - Error: If an exception occurs during the upload process.
+
+    Example:
+        - If the `VIDEO_FOLDER` is set to `/path/to/videos/`, and the metadata for `sample_video.mp4` is available 
+          in the `VIDEO_METADATA` dictionary, the video and its thumbnail will be uploaded to the database.
+    """
     help = 'Uploads videos from a specified folder into the Video model'
 
     def handle(self, *args, **kwargs):
+        """
+        Main handler for the `upload_videos` command.
+        
+        It processes all video files in the specified video folder, extracts their 
+        metadata, and uploads them to the database as instances of the `Video` model.
+        """
         video_folder = os.environ.get('VIDEO_FOLDER')
         video_files = [f for f in os.listdir(video_folder) if os.path.isfile(os.path.join(video_folder, f))]
 
