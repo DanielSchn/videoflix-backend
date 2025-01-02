@@ -1,75 +1,73 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <style>
-        @font-face {
-            font-family: 'Roboto';
-            src: 
-                url('https://videoflix.dschneider-dev.de/assets/roboto-regular.woff') format('woff'),
-                url('https://videoflix.dschneider-dev.de/assets/roboto-regular.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #2E3EDF;
-            color: #FFFFFF;
-            font-weight: bold;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 40px;
-            height: 48px;
-            width: 198px;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #888;
-        }
-        .logo-head-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+      @font-face {
+        font-family: 'Roboto';
+        src: url('https://videoflix.dschneider-dev.de/assets/roboto-regular.woff') format('woff'), url('https://videoflix.dschneider-dev.de/assets/roboto-regular.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+      }
+      body {
+        font-family: 'Roboto', Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f9f9f9;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #2e3edf;
+        color: #ffffff;
+        font-weight: bold;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 40px;
+        height: 48px;
+        width: 198px;
+        margin-top: 20px;
+      }
+      .button:hover {
+        background: #0056b3;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #888;
+      }
+      .logo-head-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="logo-head-container">
-            <img src="https://videoflix.dschneider-dev.de/assets/mail_logo.png">
-        </div>
-        
-        <p>Hallo {{ user.email }},</p>
-        <p>Vielen Dank für Ihre Registrierung! Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Button klicken:</p>
-        <a href="{{ verification_url }}" class="button">E-Mail bestätigen</a>
-        <p>Wenn der Button nicht funktioniert, kopieren Sie den folgenden Link und fügen Sie ihn in Ihren Browser ein:</p>
-        <p>{{ verification_url }}</p>
-        <div class="footer">
-            <p>Danke, dass Sie Videoflix nutzen!</p>
-            <p>Das Videoflix-Team</p>
-            <p>PS: Falls Sie sich nicht angemeldet haben, dann ignorieren Sie diese Nachricht bitte.</p>
-        </div>
+      <div class="logo-head-container">
+        <img src="https://videoflix.dschneider-dev.de/assets/mail_logo.png" />
+      </div>
+
+      <p>Hello {{ user.email }},</p>
+      <p>Thank you for registering! Please confirm your email address by clicking the button below:</p>
+      <a href="{{ verification_url }}" class="button">Confirm Email</a>
+      <p>If the button doesn't work, copy the following link and paste it into your browser:</p>
+      <p>{{ verification_url }}</p>
+      <div class="footer">
+        <p>Thank you for using Videoflix!</p>
+        <p>The Videoflix Team</p>
+        <p>PS: If you did not sign up, please ignore this message.</p>
+      </div>
     </div>
-</body>
+  </body>
 </html>
