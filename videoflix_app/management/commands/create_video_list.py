@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand
 from videoflix_app.models import Video
 from django.core.files import File
-from django.db import transaction
+
 
 # Die vordefinierten Titel und Beschreibungen der Videos, basierend auf den Dateinamen
 VIDEO_METADATA = {

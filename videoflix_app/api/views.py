@@ -6,7 +6,7 @@ from videoflix_app.models import Video, VideoProgress
 from .serializers import VideoSerializer, VideoProgressSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.exceptions import NotAuthenticated
 
 
