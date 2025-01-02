@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import sys
+
 
 load_dotenv()
 
@@ -38,15 +40,18 @@ INTERNAL_IPS = os.environ.get('INTERNAL_IPS', '').split(',')
 #custom user
 AUTH_USER_MODEL = 'users.CustomUser'
 
+TESTING = 'test' in sys.argv
+
+
 
 # change True or False to show the toolbar
-def show_toolbar(request):
-    return True
+# def show_toolbar(request):
+#     return True
 
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
-}
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+# }
 
 
 # Application definition
@@ -62,11 +67,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'videoflix_app',
-    'debug_toolbar',
+    #'debug_toolbar',
     'django_rq',
     'import_export',
     'users',
 ]
+
+# if not TESTING:
+#     INSTALLED_APPS += ['debug_toolbar']
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
