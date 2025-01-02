@@ -11,7 +11,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     fieldsets = (
         
         (
-            'Individuelle Daten',
+            'Individual data',
             {
                 'fields': (
                     'custom',

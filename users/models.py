@@ -15,24 +15,6 @@ class CustomUser(AbstractUser):
         - is_email_verified: A BooleanField to track whether the user's email has been verified.
         - registration_date: A DateTimeField that automatically sets the registration date when a user is created.
         - email: A unique EmailField used as the primary identifier for the user.
-
-    Configuration:
-        - `USERNAME_FIELD`: Specifies that the `email` field will be used for authentication.
-        - `REQUIRED_FIELDS`: Specifies that the `username` field is required when creating a user via the Django admin interface.
-
-    Methods:
-        - `__str__(self)`: Returns the user's email as the string representation of the user.
-
-    Meta:
-        - `ordering`: Specifies that the users will be ordered by their email field.
-        - `verbose_name` and `verbose_name_plural`: Specifies the human-readable singular and plural names for the model.
-
-    Example Usage:
-        - To create a user with this custom model:
-            user = CustomUser.objects.create_user(email="user@example.com", username="user", password="password123")
-
-    Permissions and Authentication:
-        - The `email` field is used as the unique identifier for the user instead of the default `username`.
     """
     custom = models.TextField(max_length=1000, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)

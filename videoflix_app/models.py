@@ -3,7 +3,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 class Video(models.Model):
-
+    """
+    Represents a video object in the system, including metadata, different resolution versions,
+    and thumbnails.
+    """
     original_file = models.FileField(upload_to='videos/originals/', blank=True, null=True)
     video_480p = models.FileField(upload_to='videos/480p/', blank=True, null=True)
     video_720p = models.FileField(upload_to='videos/720p/', blank=True, null=True)
@@ -19,6 +22,9 @@ class Video(models.Model):
     
 
 class VideoProgress(models.Model):
+    """
+    Tracks a user's progress in watching a particular video, including the current playback position.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video_name = models.CharField(max_length=150)
     current_time = models.FloatField()

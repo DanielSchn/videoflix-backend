@@ -70,24 +70,6 @@ class Command(BaseCommand):
 
     Usage:
         python manage.py upload_videos
-
-    Environment Variables:
-        - `VIDEO_FOLDER`: The folder where video files and thumbnail images are stored.
-    
-    Metadata:
-        - The metadata for the videos is expected to be found in the `VIDEO_METADATA` dictionary.
-        - The dictionary keys are the filenames (case-insensitive) of the video files, and the values should contain 
-          metadata such as `title`, `description`, and `thumbnail`.
-
-    Output:
-        The command will output the following based on its execution:
-        - Success: If the video and thumbnail are successfully uploaded.
-        - Warning: If the video or thumbnail file is missing.
-        - Error: If an exception occurs during the upload process.
-
-    Example:
-        - If the `VIDEO_FOLDER` is set to `/path/to/videos/`, and the metadata for `sample_video.mp4` is available 
-          in the `VIDEO_METADATA` dictionary, the video and its thumbnail will be uploaded to the database.
     """
     help = 'Uploads videos from a specified folder into the Video model'
 

@@ -20,22 +20,6 @@ class VideoViewSet(viewsets.ModelViewSet):
     This viewset provides CRUD operations (Create, Read, Update, Delete) for the `Video` model. It includes
     actions for listing all videos, retrieving individual videos, and deleting videos. It ensures that only
     authenticated users can perform these actions.
-
-    Actions:
-        - `list`: Returns a list of all video objects.
-        - `retrieve`: Returns details of a single video.
-        - `destroy`: Deletes a video.
-
-    Permissions:
-        - `IsAuthenticated`: Only authenticated users can access these views.
-
-    Example Usage:
-        - To get a list of videos:
-            GET /videos/
-        - To get the details of a specific video:
-            GET /videos/{video_id}/
-        - To delete a video:
-            DELETE /videos/{video_id}/
     """
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
@@ -78,20 +62,6 @@ class VideoProgressViewSet(viewsets.ModelViewSet):
     This viewset provides actions for tracking and retrieving a user's progress while watching videos.
     It allows users to get their progress on specific videos and store or update progress data.
     The `get_queryset` method filters the progress by the currently authenticated user.
-
-    Actions:
-        - `list`: Returns a list of all video progress entries for the current user.
-        - `retrieve`: Retrieves details of a specific video progress entry (not implemented here).
-        - `get_user_progress`: Returns the progress of the user for a specific video (e.g., current timestamp of where the user left off).
-    
-    Permissions:
-        - `IsAuthenticated`: Only authenticated users can access these views.
-    
-    Example Usage:
-        - To get a list of video progress for the logged-in user:
-            GET /video-progress/
-        - To get the user's progress for a specific video:
-            GET /video-progress/get_user_progress/?video_name=some_video_name
     """
     serializer_class = VideoProgressSerializer
     queryset = VideoProgress.objects.all()

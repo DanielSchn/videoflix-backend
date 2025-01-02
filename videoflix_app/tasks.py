@@ -20,13 +20,6 @@ def convert_video(source, video_instance):
     - It takes the original video (source file), converts it into different resolutions using `ffmpeg`,
       and stores the resulting files in the appropriate fields on the `Video` model.
     - The original file is deleted after the conversion, and the category of the video is set.
-    
-    Args:
-        source (str): The path to the source video file that needs to be converted.
-        video_instance (Video): The `Video` model instance where the converted files will be saved.
-
-    Returns:
-        Video | None: The updated `video_instance` if successful, or `None` if an error occurs.
     """
     if not os.path.isfile(source):
         print(f'Die Eingabedatei existiert nicht!')
@@ -67,12 +60,6 @@ def set_video_category_for_all():
     """
     Sets the category for all videos in the database by calling `set_video_category` 
     for each video instance.
-
-    - This function loops through all `Video` instances and assigns categories 
-      based on the thumbnail filename.
-
-    Returns:
-        None
     """
     videos = Video.objects.all()
     for video in videos:
@@ -82,16 +69,6 @@ def set_video_category_for_all():
 def extract_category_from_filename(filename):
     """
     Extracts a category from the filename of a video thumbnail.
-
-    - This function checks if the filename contains any category listed in `ALLOWED_CATEGORIES`.
-      If a match is found, the corresponding category is returned.
-    - If no category is found, `None` is returned.
-
-    Args:
-        filename (str): The filename of the thumbnail to extract the category from.
-
-    Returns:
-        str | None: The category found in the filename or `None` if no category matches.
     """
     for category in ALLOWED_CATEGORIES:
         if category in filename.lower():
@@ -102,17 +79,6 @@ def extract_category_from_filename(filename):
 def set_video_category(video_instance):
     """
     Sets the category for a given `video_instance` based on the filename of its thumbnail.
-
-    - The category is determined by checking the thumbnail's filename using `extract_category_from_filename`.
-    - If a valid category is found, it is assigned to the `category` field of the video instance, 
-      and the video is saved.
-    - If no category is found, a message is logged indicating that no valid category was found.
-
-    Args:
-        video_instance (Video): The `Video` model instance whose category needs to be set.
-
-    Returns:
-        None
     """
     filename = video_instance.thumbnail.name
     print(f"Thumbnail Dateiname: {filename}")
