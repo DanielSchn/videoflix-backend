@@ -37,6 +37,15 @@ class RegistrationSerializer(serializers.ModelSerializer):
             }
         }
 
+    def validate_email(self, value):
+        """
+        Custom validation for email to avoid disclosing if an email already exists.
+        """
+        if get_user_model().objects.filter(email=value).exists():
+            raise serializers.ValidationError({'error': ["Registration could not be completed."]})
+        return value
+    
+
     def save(self):
         """
         Overridden save method to handle custom user creation.

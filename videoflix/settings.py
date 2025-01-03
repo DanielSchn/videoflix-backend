@@ -67,14 +67,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'videoflix_app',
-    #'debug_toolbar',
+    # 'debug_toolbar',
     'django_rq',
     'import_export',
     'users',
 ]
 
-# if not TESTING:
-#     INSTALLED_APPS += ['debug_toolbar']
+if not TESTING:
+    INSTALLED_APPS += ['debug_toolbar']
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
