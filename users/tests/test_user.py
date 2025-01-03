@@ -4,12 +4,11 @@ from django.urls import reverse
 from rest_framework import status
 
 
-
 User = get_user_model()
+
 
 class UserTest(APITestCase):
     
-
     def setUp(self):
         
         self.admin = User.objects.create_superuser(
@@ -18,10 +17,6 @@ class UserTest(APITestCase):
             username='user@test.de', password='testpassword', email='user@test.de', is_email_verified=True)
         
         self.client = APIClient()
-
-
-    # def test_user(self):
-    #     print(User.objects.all())
 
 
     def test_register_user(self):
@@ -46,6 +41,7 @@ class UserTest(APITestCase):
         }
 
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json()["password"], ["Ensure this field has at least 8 characters."])
 
@@ -59,9 +55,23 @@ class UserTest(APITestCase):
         }
 
         response = self.client.post(url, data, format='json')
-        print('DATA',response.data)
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json()["email"], ["User with this email already exists."])
+
+    
+    def test_register_user_usermame_wrong(self):
+        url = reverse('registration')
+        data = {
+            "email": "user@test",
+            "password": "safepassword",
+            "confirm_password": "safepassword"
+        }
+
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json()["email"], ["Enter a valid email address."])
 
 
     def test_login(self):

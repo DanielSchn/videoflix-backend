@@ -42,7 +42,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         Custom validation for email to avoid disclosing if an email already exists.
         """
         if get_user_model().objects.filter(email=value).exists():
-            raise serializers.ValidationError({'error': ["Registration could not be completed."]})
+            raise serializers.ValidationError({'error': ['Registration could not be completed.']})
         return value
     
 
