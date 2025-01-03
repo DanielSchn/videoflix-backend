@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from videoflix_app.models import Video
-from datetime import datetime
 
 
 User = get_user_model()
@@ -22,9 +20,6 @@ class VideoTest(APITestCase):
         self.token = Token.objects.create(user=self.user)
         
         self.client = APIClient()
-
-#self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
-
 
 
     def test_list_video_unauthenticated(self):
