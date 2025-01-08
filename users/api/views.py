@@ -125,6 +125,9 @@ class LoginView(APIView):
         if not user:
             return Response({'detail': 'Wrong log in data.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        if not user.is_email_verified:  
+            return Response({'detail': 'Email is not verified.'}, status=status.HTTP_400_BAD_REQUEST)
+
         data = {}
 
         token, created = Token.objects.get_or_create(user=user)
